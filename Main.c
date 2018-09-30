@@ -122,23 +122,10 @@ int Check_col2(int M1[3][3], int M2[3][3], int M3[3][3])
     return 0;
 }
 
-int main(void)
+int Check_rows_and_cols(int M1[3][3],int M2[3][3],int M3[3][3],int M4[3][3],int M5[3][3],int M6[3][3])
 {
-    srand(time(0)); /* Le metemos una seed al rand, porque si no, siempre es el mismo rand */
-    int M1[3][3],M2[3][3],M3[3][3],M4[3][3],M5[3][3],M6[3][3],M7[3][3],M8[3][3],M9[3][3];
-    int check = 0;
-
-    /* Iniciamos todas las matrices */
-    Matriz(M1);
-    Matriz(M2);
-    Matriz(M3);
-    Check_row(M1,M2,M3);
-    Matriz(M4);
-    Check_col(M1,M4);
-    Matriz(M5);
-    Check_col(M2,M5);
-    Matriz(M6);
-    Check_col(M3,M6);
+    int counter = 0;
+    int check;
     do{
         check = 0;
         int temp1[3][3],temp2[3][3];
@@ -168,46 +155,23 @@ int main(void)
                 }
             }
         }
-    }while(check);
-    /* Las ultimas 3 matrices solo siguen las normas en cuanto a filas, falta solucionar esta ultima parte */
-    Matriz(M7);
-    Matriz(M8);
-    Matriz(M9);
-    Check_row(M7,M8,M9);
-
-    do{
-        check = 0;
-        int temp1[3][3],temp2[3][3],temp3[3][3];
-        /* Generamos las matrices M4, M5 y M6 siguiendo las normas en cuanto a columnas */
-        Check_col2(M1,M4,M7);
-        Check_col2(M2,M5,M8);
-        Check_col2(M3,M6,M9);
-        /* Este for almacena dichas matrices en matrices temporales (que nos serviran para saber si al comprobar si siguen las normas en cuanto filas, estas son alteradas) */
-        for(int i = 0;i<3;i++)
+        printf("1");
+        counter++;
+        if(counter == 100)
         {
-            for(int j = 0;j<3;j++)
-            {
-                temp1[i][j] = M7[i][j];
-                temp2[i][j] = M8[i][j];
-                temp3[i][j] = M9[i][j];
-            }
-        }
-        /* Comprobamos si siguen las normas en cuanto a filas */
-        Check_row(M7,M8,M9);
-        /* Este for detecta cualquier cambio en las matrices, respecto a sus matrices temporales. Si son iguales, tenemos sudoku 2x3 */
-        for(int i = 0;i<3;i++)
-        {
-            for(int j = 0;j<3;j++)
-            {
-                if((M7[i][j] != temp1[i][j])||(M8[i][j] != temp2[i][j])||(M9[i][j] != temp3[i][j]))
-                {
-                    check = 1;
-                }
-            }
+           counter = 0;
+           Matriz(M1);
+           Matriz(M2);
+           Matriz(M3);
+           Check_row(M1,M2,M3);
         }
     }while(check);
+    return 0;
+}
 
-    /* La tontería de aquí debajo es para printearlo de forma "sudoku" */
+/* La tontería de aquí debajo es para printearlo de forma "sudoku" */
+int Display(int M1[3][3],int M2[3][3],int M3[3][3],int M4[3][3],int M5[3][3],int M6[3][3],int M7[3][3],int M8[3][3],int M9[3][3])
+{
     for(int i = 0;i<3;i++)
     {
        for(int j = 0;j<3;j++)
@@ -264,6 +228,77 @@ int main(void)
        }
        printf("\n");
     }
-return 0;
+    return 0;
+}
 
+int main(void)
+{
+    srand(time(0)); /* Le metemos una seed al rand, porque si no, siempre es el mismo rand */
+    int M1[3][3],M2[3][3],M3[3][3],M4[3][3],M5[3][3],M6[3][3],M7[3][3],M8[3][3],M9[3][3];
+    int check;
+    int counter = 0;
+
+    /* Iniciamos todas las matrices */
+    Matriz(M1);
+    Matriz(M2);
+    Matriz(M3);
+    Check_row(M1,M2,M3);
+    Matriz(M4);
+    Check_col(M1,M4);
+    Matriz(M5);
+    Check_col(M2,M5);
+    Matriz(M6);
+    Check_col(M3,M6);
+    Check_rows_and_cols(M1,M2,M3,M4,M5,M6);
+    /* Las ultimas 3 matrices solo siguen las normas en cuanto a filas, falta solucionar esta ultima parte */
+    Matriz(M7);
+    Matriz(M8);
+    Matriz(M9);
+
+    do{
+        check = 0;
+        int temp1[3][3],temp2[3][3],temp3[3][3];
+        /* Generamos las matrices M4, M5 y M6 siguiendo las normas en cuanto a columnas */
+        Check_col2(M1,M4,M7);
+        Check_col2(M2,M5,M8);
+        Check_col2(M3,M6,M9);
+        /* Este for almacena dichas matrices en matrices temporales (que nos serviran para saber si al comprobar si siguen las normas en cuanto filas, estas son alteradas) */
+        for(int i = 0;i<3;i++)
+        {
+            for(int j = 0;j<3;j++)
+            {
+                temp1[i][j] = M7[i][j];
+                temp2[i][j] = M8[i][j];
+                temp3[i][j] = M9[i][j];
+            }
+        }
+        /* Comprobamos si siguen las normas en cuanto a filas */
+        Check_row(M7,M8,M9);
+        /* Este for detecta cualquier cambio en las matrices, respecto a sus matrices temporales. Si son iguales, tenemos sudoku 2x3 */
+        for(int i = 0;i<3;i++)
+        {
+            for(int j = 0;j<3;j++)
+            {
+                if((M7[i][j] != temp1[i][j])||(M8[i][j] != temp2[i][j])||(M9[i][j] != temp3[i][j]))
+                {
+                    check = 1;
+                }
+            }
+        }
+        counter++;
+        if(counter == 100)
+        {
+           counter = 0;
+           Matriz(M4);
+           Matriz(M5);
+           Matriz(M6);
+           Check_rows_and_cols(M1,M2,M3,M4,M5,M6);
+        }
+        printf("2");
+    }while(check);
+
+    printf("\n");
+    Display(M1,M2,M3,M4,M5,M6,M7,M8,M9);
+
+return 0;
 }
