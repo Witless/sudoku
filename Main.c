@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-/* Este programa AHORA MISMO, solo genera sudokus 2x3. También cabe destacar que cada x intentos, el programa no es capaz de alcanzar una solución, lo cual no da muchas esperanzas en el de 3x3... */
 int Matriz(int Mn[3][3])
 {
     int numbers[9] = {1,2,3,4,5,6,7,8,9};
