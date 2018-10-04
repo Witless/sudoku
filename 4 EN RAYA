@@ -1,0 +1,196 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+// defino el nombre y comprobacionalor de la matriz en un define para dejarlo estatico
+#define f 8
+#define c 8
+char tabla[f][c];
+int i,j,empezar;
+
+//Compruebo si ya exixte una ficha en la posicion
+int comprobacion(int fila,int columna){
+	int comprobacion;
+     comprobacion=1; 
+  if (fila>=f|| fila<0 || columna>=c || columna<0) 
+  comprobacion=0;
+  if (comprobacion==1) {
+    if (tabla[fila][columna]=='O' || tabla[fila][columna]=='X') 
+	comprobacion=0;
+  }
+
+  if (comprobacion==1) {
+    if (fila!=f-1 && tabla[fila+1][columna]==' ') 
+	comprobacion=0;
+  }
+
+  return comprobacion;
+}
+// Coloco la ficha segun la comprobacion 
+int jugador(int turno) {
+  int fila,columna,jugada;
+  char ficha; 
+   jugada=1;
+
+  if (turno==0) {
+    ficha='O';
+    printf("Turno del jugador:.\n");
+    do {
+      if (jugada==0) printf("Parametros no validos.\n");
+      printf("Introduce la columna en la que  colocar tu ficha: ");
+      scanf("%d",&columna);
+      i=f-1;
+      if (tabla[f-1][columna]!=' ') {
+        while(i<f && (tabla[i][columna]=='X' || tabla[i][columna]=='O'))
+          i--;
+      }
+      fila=i;
+      jugada=comprobacion(fila,columna);
+    } while(jugada==0);
+  } else {
+    ficha='X';
+    // genero la columna random que usare mas abajo para sacar la ficha del ordenador
+    do {
+      columna=rand()%c;
+      i=f-1;
+      // comprobamos que esa jugada se puede hacer
+      if (tabla[f-1][columna]!=' ') {
+        while(i<f && (tabla[i][columna]=='X' || tabla[i][columna]=='O'))
+          i--;
+      }
+      fila=i;
+     jugada=comprobacion(fila,columna);
+    } while(jugada==0);
+  }
+
+  if (jugada==1) tabla[fila][columna]=ficha;
+  return jugada;
+}
+// genera la tabla
+int start() {
+  int posicion;
+
+  system("cls");
+  for(j=0;j<c/2;j++) printf(" ");
+
+  printf("\t\t4 EN RAYA");
+  for(j=0;j<c+1;j++) 
+  printf("\n");
+
+  for(i=0;i<f;i++) {
+      printf(" %d |",i);
+   
+    for(j=0;j<c;j++) {
+      printf(" ");
+      printf("%c",tabla[i][j]);
+      printf(" |");
+    }
+    printf(" ");
+
+   printf("\n  ");
+   
+    printf(" -");
+    for(j=0;j<c+1;j++) printf("----");
+    printf("\n");
+  }
+  printf("       ");
+  for(j=0;j<c;j++) printf("%d   ",j);
+  printf("\n");
+}
+
+// "Escaneo" la tabla para comprobacioner si hay um ganador de la partida 
+int ganador() {
+  int escaner; 
+  escaner=-1;
+  //columnas
+for(i=0;i<f;i++) {
+for(j=0;j<c-3;j++) {
+if (tabla[i][j]=='X' && tabla[i][j+1]=='X' && tabla[i][j+2]=='X' && tabla[i][j+3]=='X')
+        escaner=0;
+else if (tabla[i][j]=='O' && tabla[i][j+1]=='O' && tabla[i][j+2]=='O' && tabla[i][j+3]=='O')
+        escaner=1;
+    }
+  }
+  if (escaner==-1) {
+for(i=0;i<f-3;i++) {
+for(j=0;j<c;j++) {
+if (tabla[i][j]=='X' && tabla[i+1][j]=='X' && tabla[i+2][j]=='X' && tabla[i+3][j]=='X')
+escaner=0;
+   else if (tabla[i][j]=='O' && tabla[i+1][j]=='O' && tabla[i+2][j]=='O' && tabla[i+3][j]=='O')
+escaner=1; }
+}
+}
+//filas
+  if (escaner==-1) {
+  for(i=0;i<f;i++) {
+  for(j=0;j<c;j++) {
+    if (i+3<f && j+3<c) {
+       if (tabla[i][j]=='X' && tabla[i+1][j+1]=='X' && tabla[i+2][j+2]=='X' && tabla[i+3][j+3]=='X')
+    escaner=0;
+    else if (tabla[i][j]=='O' && tabla[i+1][j+1]=='O' && tabla[i+2][j+2]=='O' && tabla[i+3][j+3]=='O')
+    escaner=1;
+ }
+ }
+}
+//diagonal
+  if (escaner==-1) {
+for(i=0;i<f;i++) {
+ for(j=0;j<c;j++) {
+  if (i+3<f && j-3>=0) {
+  if (tabla[i][j]=='X' && tabla[i+1][j-1]=='X' && tabla[i+2][j-2]=='X' && tabla[i+3][j-3]=='X')
+  escaner=0; 
+  else if (tabla[i][j]=='O' && tabla[i+1][j-1]=='O' && tabla[i+2][j-2]=='O' && tabla[i+3][j-3]=='O')
+            escaner=1;
+  }
+ }
+}
+ }
+  return escaner;
+ }
+}
+int main () {
+srand(time(NULL));
+  int player; 
+  int total; 
+  total=0;
+  printf("1-INICIAR EL JUEGO");
+   printf("\n");
+  printf("2-SALIR");
+   printf("\n");
+  scanf("%d",&empezar);
+  switch(empezar)
+   {
+  	case 1:
+	  if(empezar=1) 
+	  {
+	  	for(i=0;i<f;i++)
+    for(j=0;j<c;j++)
+      tabla[i][j]=' ';
+
+  do {
+    if (total % 2 == 0)
+      player=0;
+    else
+      player=1;
+   
+   total++;
+   start();
+   
+    if (jugador(player)==0) {
+    }
+  } while(ganador()==-1);
+
+  if (ganador()==1)
+    printf("YOU WIN!!!\n\n");
+  else
+  printf("DIE LOSER DIE!!!\n\n");
+  getchar();
+   system("pause");
+}
+else 
+return 0;
+}
+}
+ 
+	
+
+
